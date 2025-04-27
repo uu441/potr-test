@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظم دردشات تويتش و كيك</title>
+    <title>دردشات تويتش و كيك</title>
     <style>
         * {
             margin: 0;
@@ -36,42 +36,6 @@
             color: #adadb8;
             margin-bottom: 20px;
         }
-        .setup-container {
-            background-color: #18181b;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #3a3a3d;
-            border-radius: 5px;
-            background-color: #0e0e10;
-            color: #efeff1;
-            font-size: 1rem;
-        }
-        .btn {
-            background-color: #9147ff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #772ce8;
-        }
         .chat-container {
             display: flex;
             flex-direction: row;
@@ -79,35 +43,25 @@
             gap: 20px;
             margin-bottom: 30px;
         }
-        .chat-tabs {
-            display: flex;
-            background-color: #18181b;
-            border-radius: 10px 10px 0 0;
-        }
-        .chat-tab {
-            padding: 10px 15px;
-            cursor: pointer;
-            background-color: #232329;
-            border-right: 1px solid #3a3a3d;
-        }
-        .chat-tab.active {
-            background-color: #9147ff;
-            color: white;
-        }
-        .chat-window {
-            flex: 1;
-            background-color: #18181b;
-            border-radius: 0 0 10px 10px;
-            padding: 10px;
-            overflow-y: auto;
-            border: 1px solid #2d2d3a;
-            height: 100%;
-        }
         .chat-side {
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 100%;
+            background-color: #18181b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 10px 15px;
+            background-color: #9147ff;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+        .kick-header {
+            background-color: #53fc18;
+            color: #000;
         }
         .chat-iframe {
             width: 100%;
@@ -120,71 +74,11 @@
             padding: 20px;
             margin-top: 30px;
         }
-        .hidden {
-            display: none;
-        }
-        .chat-message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 5px;
-            background-color: #232329;
-        }
-        .twitch {
-            border-left: 3px solid #9147ff;
-        }
-        .kick {
-            border-left: 3px solid #53fc18;
-        }
-        .username {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        .twitch .username {
-            color: #9147ff;
-        }
-        .kick .username {
-            color: #53fc18;
-        }
-        .message-text {
-            word-wrap: break-word;
-        }
-        .combined-view .chat-message {
-            display: block;
-        }
-        .platform-logo {
-            width: 24px;
-            height: 24px;
-            margin-left: 5px;
-            vertical-align: middle;
-        }
-        .settings-row {
-            display: flex;
-            gap: 15px;
-        }
-        .settings-column {
-            flex: 1;
-        }
-        #status {
-            margin-top: 10px;
+        .note {
+            margin-top: 20px;
             padding: 10px;
-            border-radius: 5px;
             background-color: #232329;
-            display: none;
-        }
-        #status.success {
-            display: block;
-            background-color: #2d8a39;
-            color: white;
-        }
-        #status.error {
-            display: block;
-            background-color: #8a2d2d;
-            color: white;
-        }
-        .domain-note {
-            margin-top: 10px;
-            color: #f7b955;
-            font-size: 0.9rem;
+            border-radius: 5px;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
@@ -192,274 +86,43 @@
 <body>
     <div class="container">
         <header>
-            <h1>منظم دردشات تويتش و كيك</h1>
-            <p class="subtitle">أضف روابط دردشة Twitch و Kick وتابعها في واجهة واحدة</p>
+            <h1>دردشات تويتش و كيك</h1>
+            <p class="subtitle">عرض دردشات منصتي Twitch و Kick جنبًا إلى جنب</p>
         </header>
 
-        <div class="setup-container">
-            <h2>إعداد الدردشات</h2>
-            <div class="settings-row">
-                <div class="settings-column">
-                    <div class="form-group">
-                        <label for="twitch-chat">
-                            <img src="/api/placeholder/24/24" alt="Twitch" class="platform-logo" />
-                            دردشة Twitch:
-                        </label>
-                        <input type="text" id="twitch-chat" placeholder="مثال: asmongold أو URL كامل للدردشة">
-                        <p class="domain-note">إذا لم تعمل دردشة Twitch، قم بتغيير الأسطر 16-17 في كود JavaScript لإدخال نطاق موقعك.</p>
-                    </div>
-                </div>
-                <div class="settings-column">
-                    <div class="form-group">
-                        <label for="kick-chat">
-                            <img src="/api/placeholder/24/24" alt="Kick" class="platform-logo" />
-                            دردشة Kick:
-                        </label>
-                        <input type="text" id="kick-chat" placeholder="مثال: xqc أو URL كامل للدردشة">
-                    </div>
-                </div>
-            </div>
-            <button class="btn" id="apply-settings" onclick="applySettings()">تطبيق الإعدادات</button>
-            <div id="status"></div>
-        </div>
-
+        <!-- قسم عرض الدردشات -->
         <div class="chat-container">
+            <!-- دردشة Twitch -->
             <div class="chat-side">
-                <div class="chat-tabs">
-                    <div class="chat-tab active" data-tab="twitch">
-                        <img src="/api/placeholder/24/24" alt="Twitch" class="platform-logo" />
-                        Twitch
-                    </div>
+                <div class="chat-header">
+                    Twitch Chat - قناة uu84
                 </div>
-                <div class="chat-window">
-                    <iframe id="twitch-chat-iframe" class="chat-iframe"></iframe>
-                </div>
+                <iframe src="https://www.twitch.tv/embed/uu84/chat?parent=YOUR_DOMAIN_HERE" class="chat-iframe"></iframe>
             </div>
             
+            <!-- دردشة Kick -->
             <div class="chat-side">
-                <div class="chat-tabs">
-                    <div class="chat-tab active" data-tab="kick">
-                        <img src="/api/placeholder/24/24" alt="Kick" class="platform-logo" />
-                        Kick
-                    </div>
+                <div class="chat-header kick-header">
+                    Kick Chat - قناة uu66
                 </div>
-                <div class="chat-window">
-                    <iframe id="kick-chat-iframe" class="chat-iframe"></iframe>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-container">
-            <div class="chat-side">
-                <div class="chat-tabs">
-                    <div class="chat-tab active" data-tab="combined">الدردشات المدمجة</div>
-                </div>
-                <div class="chat-window">
-                    <div id="combined-chat" class="combined-view">
-                        <div id="combined-messages"></div>
-                    </div>
-                </div>
+                <iframe src="https://kick.com/uu66/chatroom" class="chat-iframe"></iframe>
             </div>
         </div>
 
         <div class="instructions">
-            <h2>تعليمات الاستخدام:</h2>
+            <h2>تعليمات التعديل:</h2>
             <ol>
-                <li>أدخل اسم قناة Twitch أو الرابط الكامل للدردشة (مثال: asmongold).</li>
-                <li>أدخل اسم قناة Kick أو الرابط الكامل للدردشة (مثال: xqc).</li>
-                <li>اضغط على زر "تطبيق الإعدادات" للبدء.</li>
-                <li>يمكنك متابعة دردشات المنصتين جنبًا إلى جنب، أو متابعة الدردشات المدمجة في الأسفل.</li>
+                <li>لتغيير قناة Twitch، غيّر "uu84" في الرابط <code>src="https://www.twitch.tv/embed/uu84/chat?parent=YOUR_DOMAIN_HERE"</code> إلى اسم القناة التي تريدها.</li>
+                <li>غيّر أيضًا كلمة <code>YOUR_DOMAIN_HERE</code> إلى نطاق موقعك (مثلا: example.com) بدون www أو http.</li>
+                <li>لتغيير قناة Kick، غيّر "uu66" في الرابط <code>src="https://kick.com/uu66/chatroom"</code> إلى اسم القناة التي تريدها.</li>
+                <li>قم بتغيير عناوين الدردشات في عنصر "chat-header" لتعكس أسماء القنوات الجديدة.</li>
             </ol>
-            <div style="margin-top: 20px; padding: 10px; background-color: #232329; border-radius: 5px;">
+            
+            <div class="note">
                 <h3>ملاحظة مهمة:</h3>
-                <p>إذا كنت تواجه مشكلة في عرض دردشة Twitch، ستحتاج إلى تسجيل نطاق موقعك في <a href="https://dev.twitch.tv/console" style="color: #9147ff;" target="_blank">لوحة تحكم مطوري Twitch</a> وإضافته كـ "Authorized Domain".</p>
+                <p>لكي تعمل دردشة Twitch، يجب تسجيل نطاق موقعك في <a href="https://dev.twitch.tv/console" style="color: #9147ff;" target="_blank">لوحة تحكم مطوري Twitch</a> كنطاق مصرح به.</p>
             </div>
         </div>
     </div>
-
-<script>
-// متغيرات عامة لتجنب استخدام متغيرات داخلية كثيرة
-var twitchIntervalId = null;
-var kickIntervalId = null;
-
-// استخدم الكود الأكثر أساسية لضمان التوافق
-window.onload = function() {
-    // إضافة استدعاء مباشر لزر تطبيق الإعدادات (على الرغم من أنه مضاف في HTML)
-    var applyButton = document.getElementById('apply-settings');
-    if (applyButton) {
-        applyButton.onclick = applySettings;
-    }
-};
-
-// وظيفة تطبيق الإعدادات
-function applySettings() {
-    try {
-        var statusDiv = document.getElementById('status');
-        var twitchChatInput = document.getElementById('twitch-chat');
-        var kickChatInput = document.getElementById('kick-chat');
-        var twitchChatIframe = document.getElementById('twitch-chat-iframe');
-        var kickChatIframe = document.getElementById('kick-chat-iframe');
-        var combinedMessages = document.getElementById('combined-messages');
-
-        // عرض رسالة تأكيد
-        statusDiv.textContent = "جاري تطبيق الإعدادات...";
-        statusDiv.className = "success";
-        
-        // تطبيق الإعدادات لدردشة Twitch
-        var twitchChat = twitchChatInput.value.trim();
-        if (twitchChat) {
-            var twitchChatUrl;
-            
-            // -------------------------------
-            // تغيير هذه الأسطر إذا كنت تعرف نطاق موقعك
-            var domain = window.location.hostname;
-            if (domain === '' || domain === 'localhost') domain = 'example.com';  // تغيير إلى نطاقك
-            // -------------------------------
-            
-            if (twitchChat.includes('twitch.tv')) {
-                // استخراج اسم القناة من الرابط الكامل
-                var channelName = twitchChat.split('twitch.tv/')[1].split('/')[0].split('?')[0];
-                twitchChatUrl = "https://www.twitch.tv/embed/" + channelName + "/chat?parent=" + domain;
-            } else {
-                twitchChatUrl = "https://www.twitch.tv/embed/" + twitchChat + "/chat?parent=" + domain;
-            }
-            
-            // إضافة رابط التعليقات لـ iframe
-            twitchChatIframe.src = twitchChatUrl;
-            
-            // إضافة محاكاة رسائل Twitch للعرض المدمج
-            startTwitchMessages();
-            
-            statusDiv.textContent = "تم تطبيق الإعدادات بنجاح!";
-        }
-        
-        // تطبيق الإعدادات لدردشة Kick
-        var kickChat = kickChatInput.value.trim();
-        if (kickChat) {
-            var kickChatUrl;
-            if (kickChat.includes('kick.com')) {
-                // استخراج اسم القناة والتأكد من أن الرابط يشير إلى الدردشة
-                var kickChatUrlBase = kickChat;
-                if (!kickChatUrlBase.includes('/chatroom')) {
-                    var channelName = kickChat.split('kick.com/')[1].split('/')[0].split('?')[0];
-                    kickChatUrl = "https://kick.com/" + channelName + "/chatroom";
-                } else {
-                    kickChatUrl = kickChatUrlBase;
-                }
-            } else {
-                kickChatUrl = "https://kick.com/" + kickChat + "/chatroom";
-            }
-            
-            // إضافة رابط التعليقات لـ iframe
-            kickChatIframe.src = kickChatUrl;
-            
-            // إضافة محاكاة رسائل Kick للعرض المدمج
-            startKickMessages();
-            
-            statusDiv.textContent = "تم تطبيق الإعدادات بنجاح!";
-        }
-        
-        // إضافة رسالة تأكيد إذا لم يتم إدخال أي روابط
-        if (!twitchChat && !kickChat) {
-            statusDiv.textContent = "الرجاء إدخال رابط دردشة واحد على الأقل.";
-            statusDiv.className = "error";
-        }
-    } catch (error) {
-        // عرض رسالة خطأ إذا حدث شيء غير متوقع
-        var statusDiv = document.getElementById('status');
-        statusDiv.textContent = "حدث خطأ: " + error.message;
-        statusDiv.className = "error";
-        console.error("خطأ في تطبيق الإعدادات:", error);
-    }
-}
-
-// بدء محاكاة رسائل Twitch
-function startTwitchMessages() {
-    // إيقاف المحاكاة الحالية إن وجدت
-    if (twitchIntervalId) {
-        clearInterval(twitchIntervalId);
-    }
-    
-    var combinedMessages = document.getElementById('combined-messages');
-    if (!combinedMessages) return;
-    
-    var twitchUsernames = ['TwitchUser1', 'StreamFan42', 'GamerPro99', 'PurpleLover', 'TwitchViewer'];
-    var messages = [
-        'مرحباً بالجميع! البث رائع اليوم',
-        'هل يمكن أن تشرح ما فعلته للتو؟',
-        'LOL هذا كان مضحك جداً',
-        'متى ستلعب اللعبة الجديدة؟',
-        'شكراً على هذا البث الرائع!'
-    ];
-    
-    // استخدم setInterval بشكل بسيط
-    twitchIntervalId = setInterval(function() {
-        if (Math.random() > 0.7) { // 30% فرصة ظهور رسالة جديدة
-            var username = twitchUsernames[Math.floor(Math.random() * twitchUsernames.length)];
-            var message = messages[Math.floor(Math.random() * messages.length)];
-            addMessageToCombined(username, message, 'twitch');
-        }
-    }, 3000);
-}
-
-// بدء محاكاة رسائل Kick
-function startKickMessages() {
-    // إيقاف المحاكاة الحالية إن وجدت
-    if (kickIntervalId) {
-        clearInterval(kickIntervalId);
-    }
-    
-    var combinedMessages = document.getElementById('combined-messages');
-    if (!combinedMessages) return;
-    
-    var kickUsernames = ['KickUser1', 'GreenViewer', 'KickFan2023', 'StreamSupporter', 'NewKicker'];
-    var messages = [
-        'أنا أحب هذه القناة!',
-        'متى سيبدأ الحدث التالي؟',
-        'هل يمكنك لعب لعبة مختلفة؟',
-        'الجودة ممتازة اليوم',
-        'شكراً على النصائح المفيدة'
-    ];
-    
-    // استخدم setInterval بشكل بسيط
-    kickIntervalId = setInterval(function() {
-        if (Math.random() > 0.7) { // 30% فرصة ظهور رسالة جديدة
-            var username = kickUsernames[Math.floor(Math.random() * kickUsernames.length)];
-            var message = messages[Math.floor(Math.random() * messages.length)];
-            addMessageToCombined(username, message, 'kick');
-        }
-    }, 4000);
-}
-
-// إضافة رسالة إلى العرض المدمج
-function addMessageToCombined(username, message, platform) {
-    var combinedMessages = document.getElementById('combined-messages');
-    if (!combinedMessages) return;
-    
-    var messageEl = document.createElement('div');
-    messageEl.className = "chat-message " + platform;
-    
-    var usernameEl = document.createElement('div');
-    usernameEl.className = 'username';
-    usernameEl.textContent = username;
-    
-    var messageTextEl = document.createElement('div');
-    messageTextEl.className = 'message-text';
-    messageTextEl.textContent = message;
-    
-    messageEl.appendChild(usernameEl);
-    messageEl.appendChild(messageTextEl);
-    
-    combinedMessages.appendChild(messageEl);
-    
-    // التأكد من أن آخر الرسائل مرئية
-    combinedMessages.scrollTop = combinedMessages.scrollHeight;
-    
-    // تحديد عدد الرسائل المعروضة
-    if (combinedMessages.children.length > 50) {
-        combinedMessages.removeChild(combinedMessages.children[0]);
-    }
-}
-</script>
 </body>
 </html>
